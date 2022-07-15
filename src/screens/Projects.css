@@ -1,0 +1,85 @@
+.project-details {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: start;
+  grid-gap: 60px;
+}
+
+.project-summary {
+  /* background: #fff; */
+  padding: 30px;
+  border-radius: 15px;
+}
+
+.project-summary .due-date {
+  margin: 10px;
+  font-size: 0.9em;
+}
+
+.project-summary .details {
+  margin: 30px 0;
+  line-height: 1.8em;
+  font-size: 0.9em;
+}
+
+.project-summary .assigned-users {
+  display: flex;
+  margin-top: 20px;
+}
+
+.project-summary .assigned-users .avatar {
+  margin-right: 10px;
+}
+
+.project-summary + .btn {
+  margin-top: 20px;
+}
+
+/*project comments*/
+
+.project-comments {
+  overflow-y: scroll;
+  max-height: 75vh;
+}
+
+.project-comments label {
+  margin-bottom: 0px;
+}
+
+.project-comments .comment-input {
+  font-size: 1.5em;
+  margin: 0.5rem 0;
+  border-radius: 10px;
+  border: none;
+  border-bottom: 1px solid #333;
+  border-left: 1px solid #333;
+}
+.project-comments .comment-input:focus {
+  outline: none;
+}
+
+/* comment list  */
+
+.project-comments li {
+  padding: 16px;
+  border-radius: 5px;
+  border: 1px solid #f2f2f2;
+  margin-top: 20px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  background: #fff;
+}
+
+.project-comments .comment-author .avatar {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.comment-date {
+  font-size: 0.9em;
+  margin: 4px 0 10px;
+}
+
+.comment-content {
+  font-size: 0.9em;
+}
