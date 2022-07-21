@@ -1,7 +1,7 @@
-background: rgb(3, 42, 94);
+@import url('https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@1,700&display=swap');
 body {
   margin: 0;
-  font-family: 'Rubik Moonrocks', cursive;
+  font-family: 'Ibarra Real Nova', serif;
   margin: 0;
   font-size: 1.1em;
   background: #f4f4f4;
