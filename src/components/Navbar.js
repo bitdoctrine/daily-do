@@ -10,7 +10,6 @@ const Navbar = () => {
   const { user } = useAuthContext();
   const { logout, error } = useLogout();
 
-
   const logoutHanlder = () => {
     logout().then(() => {
       navigate('/');

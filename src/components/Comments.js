@@ -1,68 +1,116 @@
-import { formatDistanceToNow } from 'date-fns';
 import React, { useState } from 'react';
-import { timestamp } from '../firebase/config';
+import Comment from './Comment';
+import CommentForm from './CommentForm';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useFirestore } from '../hooks/useFirestore';
-import Avatar from './Avatar';
+import './Comments.css';
+import { timestamp } from '../firebase/config';
+import { v4 as uuidv4 } from 'uuid';
 
-const Comments = ({ projectId, project }) => {
-  const { updateDoc, response } = useFirestore('projects');
-  const [comment, setComment] = useState('');
+const Comments = ({ project, projectId }) => {
   const { user } = useAuthContext();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { updateDoc, response } = useFirestore('projects');
+  const [activeComment, setActiveComment] = useState(null);
 
+  const getReplies = (commentId) =>
+    project.comments
+      .filter((comment) => comment.parentId === commentId)
+      .sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
+
+  const addComment = async (text, parentId = null) => {
     const newCommentObj = {
+      createdBy: user.uid,
       displayName: user.displayName,
       photoURL: user.photoURL,
-      content: comment,
+      content: text,
       createdAt: timestamp.fromDate(new Date()),
-      id: Math.random(),
+      commentId: uuidv4(),
+      parentId,
+      likedBy: [],
     };
+
+    setActiveComment(null);
+
     await updateDoc(projectId, {
-      comments: [...project.comments, newCommentObj],
+      comments: [newCommentObj, ...project.comments],
     });
-    if (!response.error) {
-      setComment('');
-      console.log(project.comments);
-    } else {
-      console.log(response.error);
+
+    if (response.error) console.log(response.error);
+  };
+
+  //delete comment function
+  const deleteComment = async (id) => {
+    const filteredComments = project.comments.filter(
+      (comment) => comment.commentId !== id
+    );
+    try {
+      if (window.confirm('Delete this comment ?')) {
+        await updateDoc(projectId, { comments: [...filteredComments] });
+      }
+    } catch (err) {
+      console.log(err.message);
     }
   };
+
+  const updateComment = async (text, commentId) => {
+    const updatedCommentList = project.comments.map((x) => {
+      if (x.commentId === commentId) {
+        return { ...x, content: text };
+      }
+      return x;
+    });
+    if (window.confirm('Update this Post?')) {
+      updateDoc(projectId, { comments: [...updatedCommentList] });
+    }
+    setActiveComment(null);
+  };
+
+  const rootComments = project.comments.filter(
+    (comment) => comment.parentId === null
+  );
+
+  const handleLike = async (commentId) => {
+    const updatedCommentList = project.comments.map((comment) => {
+      if (comment.commentId === commentId) {
+        if (comment.likedBy?.includes(user.uid)) {
+          return comment;
+        } else {
+          comment.likedBy.push(user.uid);
+        }
+      }
+      return comment;
+    });
+
+    try {
+      await updateDoc(projectId, { comments: [...updatedCommentList] });
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
-    <div className="project-comments scrollbar-hide">
-      <h4>Comments</h4>
-      <ul>
-        {project.comments.length > 0 &&
-          project.comments.map((c) => (
-            <li key={c.id}>
-              <div className="comment-author flex justify-start gap-2  items-center">
-                <Avatar src={c.photoURL} />
-                <p> {c.displayName}</p>
-              </div>
-              <div className="comment-date">
-                <p>
-                  {formatDistanceToNow(c.createdAt.toDate(), {
-                    addSuffix: true,
-                  })}
-                </p>
-              </div>
-              <div className="comment-content">{c.content}</div>
-            </li>
+    <div className="comments overflow-y-scroll scrollbar-hide max-h-[80vh]">
+      <h3 className="comments-title">Project Comments</h3>
+      <div className="comment-form-title">Write a Comment</div>
+      <CommentForm submitLabel="Write" handleSubmit={addComment} />
+      <div className="comments-container">
+        {rootComments &&
+          rootComments.length > 0 &&
+          rootComments.map((comment) => (
+            <Comment
+              key={comment.commentId}
+              comment={comment}
+              replies={getReplies(comment.commentId)}
+              user={user}
+              handleDelete={deleteComment}
+              activeComment={activeComment}
+              setActiveComment={setActiveComment}
+              addComment={addComment}
+              updateComment={updateComment}
+              handleLike={handleLike}
+            />
           ))}
-      </ul>
-      <form onSubmit={handleSubmit} className="add-comment">
-        <label>
-          <span>Say something..: </span>
-          <input
-            className="comment-input"
-            required
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-          />
-        </label>
-        <button className="btn bg-slate-700 text-slate-100">Add Comment</button>
-      </form>
+      </div>
     </div>
   );
 };

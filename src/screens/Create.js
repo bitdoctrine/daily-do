@@ -80,7 +80,6 @@ const Create = () => {
       setError(response.error);
     } else {
       navigate('/');
-      console.log('New Project Added');
     }
   };
 

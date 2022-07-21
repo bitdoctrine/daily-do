@@ -9,7 +9,7 @@ const ProjectList = ({ documents }) => {
   return (
     <div className="project-list">
       {documents.map((doc) => (
-        <Link to={`/projects/${doc.id}`} className="doc" key={doc.name}>
+        <Link to={`/projects/${doc.id}`} className="doc" key={doc.id}>
           <h4 className="title text-slate-700"> {doc.name}</h4>
           <p>By__: {doc.createdBy.displayName}</p>
           <p>Due By {doc.dueDate.toDate().toDateString()}</p>

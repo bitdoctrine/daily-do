@@ -7,20 +7,6 @@ export const useDocument = (collection, docId) => {
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   setError(null);
-    //   setIsPending(true);
-    //   try {
-    //     const doc = await storage.collection(collection).doc(docId).get();
-    //     setProject(doc.data());
-    //     setIsPending(false);
-    //   } catch (err) {
-    //     setError(err.message);
-    //     setIsPending(false);
-    //   }
-    // };
-
-    // fetchData();
     setIsPending(true);
 
     const ref = storage.collection(collection).doc(docId);
