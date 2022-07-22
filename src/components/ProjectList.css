@@ -36,3 +36,12 @@
   width: 30px;
   height: 30px;
 }
+
+.project-list .doc {
+  transition: all 500ms ease-in-out;
+}
+
+.project-list .doc:hover {
+  transform: scale(1.05);
+  transition: all 500ms ease-in-out;
+}

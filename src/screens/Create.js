@@ -99,7 +99,7 @@ const Create = () => {
           />
         </label>
         <label>
-          <span>project Description: </span>{' '}
+          <span>Project Description: </span>{' '}
           <textarea
             required
             onChange={(e) => {

@@ -22,8 +22,8 @@ const ProjectFilter = ({ changeFilter, currentFilter }) => {
             key={f}
             className={
               currentFilter === f
-                ? `bg-slate-100 text-slate-700 mx-2 border-r-slate-700 p-1 rounded-md cursor-pointer`
-                : 'bg-slate-700 text-slate-100 mx-2 border-r-slate-700 p-1 rounded-md cursor-pointer'
+                ? `bg-slate-100 text-slate-700 mx-2 border-r-slate-700 p-1 rounded-md cursor-pointer transition-all duration-500 ease-in-out`
+                : 'bg-slate-700 text-slate-100 mx-2 border-r-slate-700 p-1 rounded-md cursor-pointer transition-all duration-500 ease-in-out'
             }
             onClick={() => handleClick(f)}
           >
